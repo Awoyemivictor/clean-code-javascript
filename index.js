@@ -490,3 +490,121 @@ if (isDOMNodeNotPresent(node)) {
 
 
 // Avoid conditionals
+// Bad:
+class Airplane {
+    // ... 
+    getCruisingAltitude() {
+        switch (this.type) {
+            case "777":
+                return this.getMaxAltitude() - this.getPassengerCount();
+            case "Air Force One":
+                return this.getMaxAltitude();
+            case "Cessna":
+                return this.getMaxAltitude() - this.getFuelExpenditure();
+        }
+    }
+}
+
+// Good
+class Airplane {
+    // ... 
+}
+
+class Boeing777 extends Airplane {
+    // ... 
+    getCruisingAltitude() {
+        return this.getMaxAltitude() - this.getPassengerCount();
+    }
+}
+
+class AirForceOne extends Airplane {
+    // ... 
+    getCruisingAltitude() {
+        return this.getMaxAltitude();
+    }
+}
+
+class Cessna extends Airplane {
+    // ... 
+    getCruisingAltitude() {
+        return this.getMaxAltitude() - this.getFuelExpenditure();
+    }
+}
+
+
+// Avoid type-checking (part 1)
+// Bad
+function travelToTexas(vehicle) {
+    if (vehicle instanceof Bicycle) {
+        vehicle.pedal(this.currentLocation, new Location("texas"));
+    } else if (vehicle instanceof Car) {
+        vehicle.drive(this.currentLocation, new Location("texas"));
+    }
+}
+
+// Good
+function travelToTexas(vehicle) {
+    vehicle.move(this.currentLocation, new Location("texas"));
+}
+
+
+// Avoid type-checking (part 2)
+// Bad
+function combine(val1, val2) {
+    if (
+        (typeof val1 === "number" && typeof val2 === "number") ||
+        (typeof val1 === "string" && typeof val2 === "string")
+    ) {
+        return val1 + val2;
+    }
+
+    throw new Error("Must be of type String or Number");
+}
+
+// Good
+function combine(val1, val2) {
+    return val1 + val2;
+}
+
+// Don't over-optimize
+// Bad
+// On old browsers, each iteration with uncached `list.length` would be costly
+// because of `list.length` recomputation. In modern browsers, this is optimized.
+for (let i = 0, len = list.length; i < len; i++) {
+    // ... 
+}
+
+// Good
+for (let i = 0; i < list.length; i++) {
+    // ... 
+}
+
+
+// Remove dead code
+// Bad
+function oldRequestModule(url) {
+    // ... 
+}
+
+function newRequestModule(url) {
+    // ... 
+}
+
+const req = newRequestModule;
+inventoryTracker("apples", req, "www.inventory-awesome.io");
+
+
+// Good
+function newRequestModule(url) {
+    // ... 
+}
+
+const req = newRequestModule;
+inventoryTracker("apples", req, "www.inventory-awesome.io");
+
+
+
+
+
+
+
